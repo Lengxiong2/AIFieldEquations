@@ -1,0 +1,49 @@
+@echo off
+:: Launch script for Quantum-Inspired Field Security System
+:: This script sets up the Python environment and launches the system
+
+echo Setting up Field Security System...
+
+:: Check for Python installation
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo Python is not installed or not in PATH
+    echo Please install Python 3.8 or higher
+    pause
+    exit /b 1
+)
+
+:: Create virtual environment if it doesn't exist
+if not exist "venv" (
+    echo Creating virtual environment...
+    python -m venv venv
+)
+
+:: Activate virtual environment
+call venv\Scripts\activate
+
+:: Install required packages
+echo Installing dependencies...
+pip install torch numpy aiohttp
+
+:: Check if config file exists
+if not exist "config.json" (
+    echo Creating default configuration...
+    echo {> config.json
+    echo   "dimension": 16,>> config.json
+    echo   "num_nodules": 16,>> config.json
+    echo   "host": "0.0.0.0",>> config.json
+    echo   "port": 8080,>> config.json
+    echo   "log_level": "INFO">> config.json
+    echo }>> config.json
+)
+
+:: Launch the system
+echo Starting Field Security System...
+python field_system.py --config config.json
+
+:: Keep window open if there's an error
+if errorlevel 1 (
+    echo System encountered an error
+    pause
+)

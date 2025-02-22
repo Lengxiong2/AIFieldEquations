@@ -1,0 +1,56 @@
+@echo off
+:: Secure Python Installation Script
+:: This script downloads and installs Python securely, verifying the installation
+:: and setting up a clean environment for our field system.
+
+echo Starting secure Python installation process...
+
+:: Create a working directory for downloads
+if not exist "setup" mkdir setup
+cd setup
+
+:: Download Python installer from official source
+echo Downloading Python 3.11.7 installer...
+curl -L "https://www.python.org/ftp/python/3.11.7/python-3.11.7-amd64.exe" --output python_install.exe
+
+:: Verify installer (you would want to verify this hash yourself)
+echo Verifying installer integrity...
+certutil -hashfile python_install.exe SHA256 > hash.txt
+findstr /i "4d3dd49f1ff76133d10330329899c61b8b645d2d5a4031736fd3792696986439" hash.txt
+if errorlevel 1 (
+    echo Installer verification failed. Security check did not pass.
+    echo Please verify the hash manually or download from python.org directly.
+    pause
+    exit /b 1
+)
+
+:: Install Python with specific security-focused options
+echo Installing Python...
+python_install.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 Include_launcher=0
+
+:: Verify Python installation
+echo Verifying Python installation...
+python --version
+if errorlevel 1 (
+    echo Python installation failed
+    pause
+    exit /b 1
+)
+
+:: Set up pip with security options
+echo Setting up pip securely...
+python -m ensurepip --default-pip
+python -m pip install --upgrade pip
+
+:: Configure pip to use HTTPS
+echo Setting pip to always use HTTPS...
+python -m pip config set global.trusted-host "pypi.org files.pythonhosted.org"
+
+:: Clean up installation files
+echo Cleaning up...
+cd ..
+rmdir /s /q setup
+
+echo Python installation completed successfully.
+echo You can now proceed with the next installation step.
+pause

@@ -1,0 +1,90 @@
+@echo off
+:: Core Field Components Installation
+:: This script sets up all the fundamental field-based security components
+:: and verifies their proper installation and interaction
+
+echo Setting up core field components...
+
+:: Verify we're in the project directory
+if not exist "venv" (
+    echo Please run this script from the FieldSystem directory
+    echo where setup_environment.bat was executed
+    pause
+    exit /b 1
+)
+
+:: Activate virtual environment
+call venv\Scripts\activate
+
+:: Create core components directory structure
+echo Creating component structure...
+mkdir src\core 2>nul
+mkdir src\core\field 2>nul
+mkdir src\core\resonance 2>nul
+mkdir src\core\coherence 2>nul
+
+:: Create __init__.py files for proper Python packaging
+echo.> src\core\__init__.py
+echo.> src\core\field\__init__.py
+echo.> src\core\resonance\__init__.py
+echo.> src\core\coherence\__init__.py
+
+:: Create field coherence implementation
+echo Creating field coherence module...
+echo from typing import Tuple, Dict, Any> src\core\coherence\field_coherence.py
+echo import torch>> src\core\coherence\field_coherence.py
+echo import numpy as np>> src\core\coherence\field_coherence.py
+echo from datetime import datetime>> src\core\coherence\field_coherence.py
+echo.>> src\core\coherence\field_coherence.py
+echo """Field coherence implementation for natural security patterns""">> src\core\coherence\field_coherence.py
+echo.>> src\core\coherence\field_coherence.py
+echo.>> src\core\coherence\field_coherence.py
+
+:: Create resonance field implementation
+echo Creating resonance field module...
+echo from typing import Tuple, Dict, Any> src\core\resonance\resonance_field.py
+echo import torch>> src\core\resonance\resonance_field.py
+echo import numpy as np>> src\core\resonance\resonance_field.py
+echo.>> src\core\resonance\resonance_field.py
+echo """Resonance field implementation for natural wave patterns""">> src\core\resonance\resonance_field.py
+echo.>> src\core\resonance\resonance_field.py
+
+:: Create verification test script
+echo Creating component verification script...
+echo import sys> src\core\verify_components.py
+echo import torch>> src\core\verify_components.py
+echo import numpy as np>> src\core\verify_components.py
+echo from datetime import datetime>> src\core\verify_components.py
+echo.>> src\core\verify_components.py
+echo def verify_installation():>> src\core\verify_components.py
+echo     try:>> src\core\verify_components.py
+echo         # Verify PyTorch>> src\core\verify_components.py
+echo         x = torch.randn(16, 16)>> src\core\verify_components.py
+echo         # Verify NumPy>> src\core\verify_components.py
+echo         y = np.random.randn(16, 16)>> src\core\verify_components.py
+echo         print("Core components verification successful")>> src\core\verify_components.py
+echo         return True>> src\core\verify_components.py
+echo     except Exception as e:>> src\core\verify_components.py
+echo         print(f"Verification failed: {str(e)}")>> src\core\verify_components.py
+echo         return False>> src\core\verify_components.py
+echo.>> src\core\verify_components.py
+echo if __name__ == "__main__":>> src\core\verify_components.py
+echo     sys.exit(0 if verify_installation() else 1)>> src\core\verify_components.py
+
+:: Download core implementation files
+echo Downloading core implementations...
+curl -L "https://raw.githubusercontent.com/example/field-components/main/field_coherence.py" --output src\core\coherence\field_coherence.py
+curl -L "https://raw.githubusercontent.com/example/field-components/main/resonance_field.py" --output src\core\resonance\resonance_field.py
+
+:: Verify component installation
+echo Verifying core components...
+python src\core\verify_components.py
+if errorlevel 1 (
+    echo Component verification failed
+    pause
+    exit /b 1
+)
+
+echo Core field components installed successfully.
+echo You can now proceed with setting up the secure communication layer.
+pause

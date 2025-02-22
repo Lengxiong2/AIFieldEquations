@@ -1,0 +1,85 @@
+@echo off
+:: Field System Environment Setup
+:: This script creates a secure virtual environment and installs required packages
+:: while maintaining security through verification steps
+
+echo Setting up secure field system environment...
+
+:: Check Python installation
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo Python is not installed or not in PATH
+    echo Please run install_python.bat first
+    pause
+    exit /b 1
+)
+
+:: Create and move to project directory
+set PROJECT_DIR=FieldSystem
+if not exist %PROJECT_DIR% (
+    echo Creating project directory...
+    mkdir %PROJECT_DIR%
+)
+cd %PROJECT_DIR%
+
+:: Create virtual environment with security isolation
+echo Creating secure virtual environment...
+python -m venv --clear venv
+call venv\Scripts\activate
+
+:: Update pip securely in virtual environment
+python -m pip install --upgrade pip
+
+:: Create requirements file with specific versions for security
+echo Creating requirements file with verified package versions...
+echo torch==2.1.2> requirements.txt
+echo numpy==1.26.3>> requirements.txt
+echo aiohttp==3.9.1>> requirements.txt
+echo cryptography==41.0.7>> requirements.txt
+echo typing-extensions==4.9.0>> requirements.txt
+
+:: Install requirements with extra security checks
+echo Installing verified dependencies...
+pip install --require-hashes --no-cache-dir -r requirements.txt
+
+:: Create essential project directories
+echo Creating project structure...
+mkdir src
+mkdir logs
+mkdir config
+mkdir security
+
+:: Create secure configuration template
+echo Creating secure configuration...
+echo {> config\config.json
+echo   "system": {>> config\config.json
+echo     "dimension": 16,>> config\config.json
+echo     "num_nodules": 16>> config\config.json
+echo   },>> config\config.json
+echo   "security": {>> config\config.json
+echo     "resonance_threshold": 0.85,>> config\config.json
+echo     "coherence_check_interval": 1000,>> config\config.json
+echo     "key_rotation_seconds": 3600>> config\config.json
+echo   },>> config\config.json
+echo   "network": {>> config\config.json
+echo     "host": "127.0.0.1",>> config\config.json
+echo     "port": 8080,>> config\config.json
+echo     "max_connections": 10>> config\config.json
+echo   }>> config\config.json
+echo }>> config\config.json
+
+:: Create initialization verification script
+echo Creating verification script...
+echo import torch> src\verify_setup.py
+echo import numpy as np>> src\verify_setup.py
+echo import aiohttp>> src\verify_setup.py
+echo from cryptography.fernet import Fernet>> src\verify_setup.py
+echo print("Environment verification successful")>> src\verify_setup.py
+
+:: Verify setup
+echo Verifying environment setup...
+python src\verify_setup.py
+
+echo Setup completed successfully. You can now proceed with system implementation.
+echo Next step will be implementing the core field components.
+pause
